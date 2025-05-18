@@ -8,27 +8,27 @@ import (
 // 该模型用于存储竞赛的基本信息，以及关联的题目和用户信息
 type ContestBasic struct {
 	// ID 是该记录的主键，用于唯一标识每个竞赛记录
-	ID              uint              `gorm:"primarykey;" json:"id"`
+	ID uint `gorm:"primarykey;" json:"id"`
 	// CreatedAt 记录该竞赛记录的创建时间
-	CreatedAt       MyTime            `json:"created_at"`
+	CreatedAt MyTime `json:"created_at"`
 	// UpdatedAt 记录该竞赛记录的最后更新时间
-	UpdatedAt       MyTime            `json:"updated_at"`
+	UpdatedAt MyTime `json:"updated_at"`
 	// DeletedAt 是软删除标记，使用 gorm 的软删除功能
-	DeletedAt       gorm.DeletedAt    `gorm:"index;" json:"deleted_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index;" json:"deleted_at"`
 	// StartAt 是竞赛的开始时间
-	StartAt         MyTime            `json:"start_at"`
+	StartAt MyTime `json:"start_at"`
 	// EndAt 是竞赛的结束时间
-	EndAt           MyTime            `json:"end_at"`
+	EndAt MyTime `json:"end_at"`
 	// Identity 是竞赛的唯一标识
-	Identity        string            `gorm:"column:identity;type:varchar(36);" json:"identity"`
+	Identity string `gorm:"column:identity;type:varchar(36);" json:"identity"`
 	// Name 是竞赛的名称
-	Name            string            `gorm:"column:name;type:varchar(100);" json:"name"`
+	Name string `gorm:"column:name;type:varchar(100);" json:"name"`
 	// Content 是竞赛的描述信息
-	Content         string            `gorm:"column:content;type:text;" json:"content"`
+	Content string `gorm:"column:content;type:text;" json:"content"`
 	// ContestProblems 是关联的竞赛题目列表，通过 contest_id 关联到 ContestProblem 表
 	ContestProblems []*ContestProblem `gorm:"foreignKey:contest_id;references:id;" json:"contest_problems"`
 	// ContestUsers 是关联的竞赛用户列表，通过 contest_id 关联到 ContestUser 表
-	ContestUsers    []*ContestUser    `gorm:"foreignKey:contest_id;references:id;" json:"contest_users"`
+	ContestUsers []*ContestUser `gorm:"foreignKey:contest_id;references:id;" json:"contest_users"`
 }
 
 // TableName 指定该模型对应的数据库表名

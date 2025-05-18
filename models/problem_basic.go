@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 )
 
@@ -40,12 +39,12 @@ type ProblemBasic struct {
 func (table *ProblemBasic) TableName() string {
 	return "problem_basic"
 }
-func GetProblemList() {
-	data := make([]*ProblemBasic, 0)
-	DB.Find(&data)
-	for _, v := range data {
-		fmt.Printf("Problem ==> %v \n", v)
-	}
+
+// GetProblemList 根据关键字查询问题列表
+// 返回一个 GORM 的查询构建器，可用于进一步的查询操作
+func GetProblemList(keyword string) *gorm.DB {
+	// 构建查询语句，通过标题或内容模糊匹配关键字
+	return DB.Model(new(ProblemBasic)).Where("title like ? OR content like ? ", "%"+keyword+"%", "%"+keyword+"%")
 }
 
 // GetProblemList 根据关键字和分类标识查询问题列表

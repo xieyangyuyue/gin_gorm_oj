@@ -6,7 +6,10 @@ import (
 	"github.com/go-redis/redis/v8"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 	"log"
+	"time"
 )
 
 // DB 是全局的 GORM 数据库实例，通过 Init 函数初始化
@@ -28,11 +31,34 @@ func Init() *gorm.DB {
 		helper.DbName,
 	)
 	// 打开数据库连接
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{ // gorm日志模式：silent
+		Logger: logger.Default.LogMode(logger.Silent),
+		// 外键约束
+		DisableForeignKeyConstraintWhenMigrating: true,
+		// 禁用默认事务（提高运行速度）
+		SkipDefaultTransaction: true,
+		NamingStrategy: schema.NamingStrategy{
+			// 使用单数表名，启用该选项，此时，`User` 的表名应该是 `user`
+			SingularTable: true,
+		}})
 	if err != nil {
 		// 记录数据库初始化错误信息
 		log.Println("gorm Init Error : ", err)
 	}
+	// 迁移数据表，在没有数据表结构变更时候，建议注释不执行
+	// 注意:初次运行后可注销此行
+	//_ = db.AutoMigrate(&CategoryBasic{}, &ContestBasic{}, &ContestProblem{},
+	//	&ContestUser{}, &ProblemBasic{}, &ProblemCategory{}, &SubmitBasic{}, &TestCase{}, &UserBasic{})
+
+	sqlDB, _ := db.DB()
+	// SetMaxIdleCons 设置连接池中的最大闲置连接数。
+	sqlDB.SetMaxIdleConns(10)
+
+	// SetMaxOpenCons 设置数据库的最大连接数量。
+	sqlDB.SetMaxOpenConns(100)
+
+	// SetConnMaxLifetiment 设置连接的最大可复用时间。
+	sqlDB.SetConnMaxLifetime(10 * time.Second)
 	return db
 }
 

@@ -8,27 +8,27 @@ import (
 // 该模型用于存储用户提交代码的基本信息，以及关联的问题和用户信息
 type SubmitBasic struct {
 	// ID 是该记录的主键，用于唯一标识每条提交记录
-	ID              uint           `gorm:"primarykey;" json:"id"`
+	ID uint `gorm:"primarykey;" json:"id"`
 	// CreatedAt 记录该提交记录的创建时间
-	CreatedAt       MyTime         `json:"created_at"`
+	CreatedAt MyTime `json:"created_at"`
 	// UpdatedAt 记录该提交记录的最后更新时间
-	UpdatedAt       MyTime         `json:"updated_at"`
+	UpdatedAt MyTime `json:"updated_at"`
 	// DeletedAt 是软删除标记，使用 gorm 的软删除功能
-	DeletedAt       gorm.DeletedAt `gorm:"index;" json:"deleted_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index;" json:"deleted_at"`
 	// Identity 是提交记录的唯一标识
-	Identity        string         `gorm:"column:identity;type:varchar(36);" json:"identity"`
+	Identity string `gorm:"column:identity;type:varchar(36);" json:"identity"`
 	// ProblemIdentity 表示该提交所属问题的唯一标识
-	ProblemIdentity string         `gorm:"column:problem_identity;type:varchar(36);" json:"problem_identity"`
+	ProblemIdentity string `gorm:"column:problem_identity;type:varchar(36);" json:"problem_identity"`
 	// ProblemBasic 是关联的问题基础信息，通过 problem_identity 关联到 ProblemBasic 表
-	ProblemBasic    *ProblemBasic  `gorm:"foreignKey:identity;references:problem_identity;" json:"problem_basic"`
+	ProblemBasic *ProblemBasic `gorm:"foreignKey:identity;references:problem_identity;" json:"problem_basic"`
 	// UserIdentity 表示提交用户的唯一标识
-	UserIdentity    string         `gorm:"column:user_identity;type:varchar(36);" json:"user_identity"`
+	UserIdentity string `gorm:"column:user_identity;type:varchar(36);" json:"user_identity"`
 	// UserBasic 是关联的用户基础信息，通过 user_identity 关联到 UserBasic 表
-	UserBasic       *UserBasic     `gorm:"foreignKey:identity;references:user_identity;" json:"user_basic"`
+	UserBasic *UserBasic `gorm:"foreignKey:identity;references:user_identity;" json:"user_basic"`
 	// Path 是提交代码的存放路径
-	Path            string         `gorm:"column:path;type:varchar(255);" json:"path"`
+	Path string `gorm:"column:path;type:varchar(255);" json:"path"`
 	// Status 表示提交的状态，-1 表示待判断，1 表示答案正确，2 表示答案错误，3 表示运行超时，4 表示运行超内存，5 表示编译错误，6 表示非法代码
-	Status          int            `gorm:"column:status;type:tinyint(1);" json:"status"`
+	Status int `gorm:"column:status;type:tinyint(1);" json:"status"`
 }
 
 // TableName 指定该模型对应的数据库表名
