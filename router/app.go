@@ -31,7 +31,7 @@ func Router() {
 	r.GET("/problem-list", service.GetProblemList)
 	r.GET("/problem-detail", service.GetProblemDetail)
 	//// 用户
-	//r.GET("/user-detail", service.GetUserDetail)
+	r.GET("/user-detail", service.GetUserDetail)
 	//r.POST("/login", service.Login)
 	//r.POST("/send-code", service.SendCode)
 	//r.POST("/register", service.Register)
