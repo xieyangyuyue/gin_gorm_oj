@@ -23,3 +23,17 @@ go.work.sum
 
 # env file
 .env
+# config file
+*.ini
+
+# .idea
+.idea
+
+# logger
+log
+
+# test
+test
+
+# docs
+docs
