@@ -40,26 +40,19 @@ func (table *ProblemBasic) TableName() string {
 	return "problem_basic"
 }
 
-// GetProblemList 根据关键字查询问题列表
-// 返回一个 GORM 的查询构建器，可用于进一步的查询操作
-func GetProblemList(keyword string) *gorm.DB {
-	// 构建查询语句，通过标题或内容模糊匹配关键字
-	return DB.Model(new(ProblemBasic)).Where("title like ? OR content like ? ", "%"+keyword+"%", "%"+keyword+"%")
-}
-
 // GetProblemList 根据关键字和分类标识查询问题列表
 // 返回一个 GORM 的查询构建器，可用于进一步的查询操作
-//func GetProblemList(keyword, categoryIdentity string) *gorm.DB {
-//	// 构建查询语句，选择问题的基本信息，并预加载关联的分类和分类基础信息
-//	tx := DB.Model(new(ProblemBasic)).Distinct("`problem_basic`.`id`").Select("DISTINCT(`problem_basic`.`id`), `problem_basic`.`identity`, "+
-//		"`problem_basic`.`title`, `problem_basic`.`max_runtime`, `problem_basic`.`max_mem`, `problem_basic`.`pass_num`, "+
-//		"`problem_basic`.`submit_num`, `problem_basic`.`created_at`, `problem_basic`.`updated_at`, `problem_basic`.`deleted_at` ").Preload("ProblemCategories").Preload("ProblemCategories.CategoryBasic").
-//		Where("title like ? OR content like ? ", "%"+keyword+"%", "%"+keyword+"%")
-//	// 如果分类标识不为空，添加分类标识的查询条件
-//	if categoryIdentity != "" {
-//		tx.Joins("RIGHT JOIN problem_category pc on pc.problem_id = problem_basic.id").
-//			Where("pc.category_id = (SELECT cb.id FROM category_basic cb WHERE cb.identity = ? )", categoryIdentity)
-//	}
-//	// 按问题记录的 ID 降序排序
-//	return tx.Order("problem_basic.id DESC")
-//}
+func GetProblemList(keyword, categoryIdentity string) *gorm.DB {
+	// 构建查询语句，选择问题的基本信息，并预加载关联的分类和分类基础信息
+	tx := DB.Model(new(ProblemBasic)).Distinct("`problem_basic`.`id`").Select("DISTINCT(`problem_basic`.`id`), `problem_basic`.`identity`, "+
+		"`problem_basic`.`title`, `problem_basic`.`max_runtime`, `problem_basic`.`max_mem`, `problem_basic`.`pass_num`, "+
+		"`problem_basic`.`submit_num`, `problem_basic`.`created_at`, `problem_basic`.`updated_at`, `problem_basic`.`deleted_at` ").Preload("ProblemCategories").Preload("ProblemCategories.CategoryBasic").
+		Where("title like ? OR content like ? ", "%"+keyword+"%", "%"+keyword+"%")
+	// 如果分类标识不为空，添加分类标识的查询条件
+	if categoryIdentity != "" {
+		tx.Joins("RIGHT JOIN problem_category pc on pc.problem_id = problem_basic.id").
+			Where("pc.category_id = (SELECT cb.id FROM category_basic cb WHERE cb.identity = ? )", categoryIdentity)
+	}
+	// 按问题记录的 ID 降序排序
+	return tx.Order("problem_basic.id DESC")
+}
