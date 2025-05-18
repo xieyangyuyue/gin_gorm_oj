@@ -1,22 +1,19 @@
 package helper
 
-//
-//import (
-//	"crypto/md5"
-//	"crypto/tls"
-//	"fmt"
-//	"io/ioutil"
-//	"math/rand"
-//	"net/smtp"
-//	"os"
-//	"strconv"
-//	"time"
-//
-//	"gin_gorm_oj/define"
-//	"github.com/jordan-wright/email"
-//	uuid "github.com/satori/go.uuid"
-//)
-//
+import (
+	"crypto/tls"
+	"io/ioutil"
+	"math/rand"
+	"net/smtp"
+	"os"
+	"strconv"
+	"time"
+
+	"gin_gorm_oj/define"
+	"github.com/jordan-wright/email"
+	uuid "github.com/satori/go.uuid"
+)
+
 //type UserClaims struct {
 //	Identity string `json:"identity"`
 //	Name     string `json:"name"`
@@ -64,108 +61,108 @@ package helper
 //	}
 //	return userClaim, nil
 //}
-//
-//// SendCode
-//// 发送验证码
-//func SendCode(toUserEmail, code string) error {
-//	e := email.NewEmail()
-//	e.From = "Get <getcharzhaopan@163.com>"
-//	e.To = []string{toUserEmail}
-//	e.Subject = "验证码已发送，请查收"
-//	e.HTML = []byte("您的验证码：<b>" + code + "</b>")
-//	return e.SendWithTLS("smtp.163.com:465",
-//		smtp.PlainAuth("", "getcharzhaopan@163.com", define.MailPassword, "smtp.163.com"),
-//		&tls.Config{InsecureSkipVerify: true, ServerName: "smtp.163.com"})
-//}
-//
-//// GetUUID
-//// 生成唯一码
-//func GetUUID() string {
-//	return uuid.NewV4().String()
-//}
-//
-//// GetRand
-//// 生成验证码
-//func GetRand() string {
-//	rand.Seed(time.Now().UnixNano())
-//	s := ""
-//	for i := 0; i < 6; i++ {
-//		s += strconv.Itoa(rand.Intn(10))
-//	}
-//	return s
-//}
-//
-//// CodeSave
-//// 保存代码
-//func CodeSave(code []byte) (string, error) {
-//	dirName := "code/" + GetUUID()
-//	path := dirName + "/main.go"
-//	err := os.Mkdir(dirName, 0777)
-//	if err != nil {
-//		return "", err
-//	}
-//	f, err := os.Create(path)
-//	if err != nil {
-//		return "", err
-//	}
-//	f.Write(code)
-//	defer f.Close()
-//	return path, nil
-//}
-//
-//// CheckGoCodeValid
-//// 检查golang代码的合法性
-//func CheckGoCodeValid(path string) (bool, error) {
-//	b, err := ioutil.ReadFile(path)
-//	if err != nil {
-//		return false, err
-//	}
-//	code := string(b)
-//	for i := 0; i < len(code)-6; i++ {
-//		if code[i:i+6] == "import" {
-//			var flag byte
-//			for i = i + 7; i < len(code); i++ {
-//				if code[i] == ' ' {
-//					continue
-//				}
-//				flag = code[i]
-//				break
-//			}
-//			if flag == '(' {
-//				for i = i + 1; i < len(code); i++ {
-//					if code[i] == ')' {
-//						break
-//					}
-//					if code[i] == '"' {
-//						t := ""
-//						for i = i + 1; i < len(code); i++ {
-//							if code[i] == '"' {
-//								break
-//							}
-//							t += string(code[i])
-//						}
-//						if _, ok := define.ValidGolangPackageMap[t]; !ok {
-//							return false, nil
-//						}
-//					}
-//				}
-//			} else if flag == '"' {
-//				t := ""
-//				for i = i + 1; i < len(code); i++ {
-//					if code[i] == '"' {
-//						break
-//					}
-//					t += string(code[i])
-//				}
-//				if _, ok := define.ValidGolangPackageMap[t]; !ok {
-//					return false, nil
-//				}
-//			}
-//		}
-//	}
-//	return true, nil
-//}
-//
-//func ToTime(num int64) time.Time {
-//	return time.Unix(num, 0)
-//}
+
+// SendCode
+// 发送验证码
+func SendCode(toUserEmail, code string) error {
+	e := email.NewEmail()
+	e.From = "Get <getcharzhaopan@163.com>"
+	e.To = []string{toUserEmail}
+	e.Subject = "验证码已发送，请查收"
+	e.HTML = []byte("您的验证码：<b>" + code + "</b>")
+	return e.SendWithTLS("smtp.163.com:465",
+		smtp.PlainAuth("", "getcharzhaopan@163.com", define.MailPassword, "smtp.163.com"),
+		&tls.Config{InsecureSkipVerify: true, ServerName: "smtp.163.com"})
+}
+
+// GetUUID
+// 生成唯一码
+func GetUUID() string {
+	return uuid.NewV4().String()
+}
+
+// GetRand
+// 生成验证码
+func GetRand() string {
+	rand.Seed(time.Now().UnixNano())
+	s := ""
+	for i := 0; i < 6; i++ {
+		s += strconv.Itoa(rand.Intn(10))
+	}
+	return s
+}
+
+// CodeSave
+// 保存代码
+func CodeSave(code []byte) (string, error) {
+	dirName := "code/" + GetUUID()
+	path := dirName + "/main.go"
+	err := os.Mkdir(dirName, 0777)
+	if err != nil {
+		return "", err
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return "", err
+	}
+	f.Write(code)
+	defer f.Close()
+	return path, nil
+}
+
+// CheckGoCodeValid
+// 检查golang代码的合法性
+func CheckGoCodeValid(path string) (bool, error) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return false, err
+	}
+	code := string(b)
+	for i := 0; i < len(code)-6; i++ {
+		if code[i:i+6] == "import" {
+			var flag byte
+			for i = i + 7; i < len(code); i++ {
+				if code[i] == ' ' {
+					continue
+				}
+				flag = code[i]
+				break
+			}
+			if flag == '(' {
+				for i = i + 1; i < len(code); i++ {
+					if code[i] == ')' {
+						break
+					}
+					if code[i] == '"' {
+						t := ""
+						for i = i + 1; i < len(code); i++ {
+							if code[i] == '"' {
+								break
+							}
+							t += string(code[i])
+						}
+						if _, ok := define.ValidGolangPackageMap[t]; !ok {
+							return false, nil
+						}
+					}
+				}
+			} else if flag == '"' {
+				t := ""
+				for i = i + 1; i < len(code); i++ {
+					if code[i] == '"' {
+						break
+					}
+					t += string(code[i])
+				}
+				if _, ok := define.ValidGolangPackageMap[t]; !ok {
+					return false, nil
+				}
+			}
+		}
+	}
+	return true, nil
+}
+
+func ToTime(num int64) time.Time {
+	return time.Unix(num, 0)
+}
