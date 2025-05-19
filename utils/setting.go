@@ -1,4 +1,4 @@
-package helper
+package utils
 
 import (
 	"fmt"
@@ -19,6 +19,14 @@ var (
 	DbPassWord string // 数据库密码（注意：建议从环境变量获取敏感信息）
 	DbName     string // 数据库名称
 
+	RedisHost     string
+	RedisPort     string
+	RedisPassWord string
+	RedisNumber   int
+
+	// MailPasswd mail 邮箱配置
+	MailPasswd string //邮箱密码
+
 	// Zone 七牛云存储配置
 	Zone       int    // 存储区域编号（1:华东 2:华北 3:华南）
 	AccessKey  string // 七牛云AccessKey
@@ -30,14 +38,16 @@ var (
 // 包初始化函数（自动执行）
 func init() {
 	// 加载配置文件（路径：config/config.ini）
-	file, err := ini.Load("./config/config.ini")
-	//file, err := ini.Load("../config/config.ini")
+	//file, err := ini.Load("./config/config.ini")
+	file, err := ini.Load("../config/config.ini")
 	if err != nil {
 		fmt.Println("配置文件读取错误，请检查文件路径:", err)
 	}
 	// 分别加载不同配置模块
 	LoadServer(file) // 加载服务器配置
 	LoadData(file)   // 加载数据库配置
+	LoadRedis(file)  //加载redis
+	LoadMail(file)   // 加载邮箱配置
 	LoadQiniu(file)  // 加载七牛云配置
 }
 
@@ -58,6 +68,21 @@ func LoadData(file *ini.File) {
 	DbUser = section.Key("DbUser").MustString("ginblog")   // 默认用户名
 	DbPassWord = section.Key("DbPassWord").String()        // 密码无默认值（必须配置）
 	DbName = section.Key("DbName").MustString("ginblog")   // 默认数据库名
+}
+
+// LoadRedis LoadData 加载redis配置模块
+func LoadRedis(file *ini.File) {
+	section := file.Section("redis")
+	RedisHost = section.Key("DbHost").MustString("localhost") // 默认本地数据库
+	RedisPort = section.Key("DbPort").MustString("6379")
+	RedisPassWord = section.Key("DbPassWord").String() // 密码无默认值（必须配置）
+	RedisNumber = section.Key("DbNumber").MustInt(0)
+}
+
+// LoadMail LoadData 加载邮箱配置模块
+func LoadMail(file *ini.File) {
+	section := file.Section("mail")
+	MailPasswd = section.Key("MailPasswd").MustString("23313123223") // 默认本地数据库
 }
 
 // LoadQiniu 加载七牛云配置模块

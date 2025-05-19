@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"gin_gorm_oj/helper"
+	"gin_gorm_oj/utils"
 	"github.com/go-redis/redis/v8"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -24,11 +24,11 @@ func Init() *gorm.DB {
 	// 构造数据库连接的 DSN 字符串
 	// 构建DSN（数据源名称）
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		helper.DbUser,
-		helper.DbPassWord,
-		helper.DbHost,
-		helper.DbPort,
-		helper.DbName,
+		utils.DbUser,
+		utils.DbPassWord,
+		utils.DbHost,
+		utils.DbPort,
+		utils.DbName,
 	)
 	// 打开数据库连接
 	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{ // gorm日志模式：silent
@@ -66,8 +66,8 @@ func Init() *gorm.DB {
 // 使用本地 Redis 服务器，端口为 6379，无密码，使用默认数据库
 func InitRedisDB() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     fmt.Sprintf("%s:%s", utils.RedisHost, utils.RedisPort), // 使用格式化拼接确保有冒号
+		Password: utils.RedisPassWord,
+		DB:       utils.RedisNumber,
 	})
 }

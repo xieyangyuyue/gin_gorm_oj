@@ -2,8 +2,8 @@ package router
 
 import (
 	_ "gin_gorm_oj/docs"
-	"gin_gorm_oj/helper"
 	"gin_gorm_oj/service"
+	"gin_gorm_oj/utils"
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -12,7 +12,7 @@ import (
 func Router() {
 	// 设置Gin运行模式（从配置中读取）
 	// utils.AppMode 可能的值：debug/test/release
-	gin.SetMode(helper.AppMode)
+	gin.SetMode(utils.AppMode)
 
 	// 创建默认路由引擎（自带Logger和Recovery中间件）
 	r := gin.Default()
@@ -32,9 +32,9 @@ func Router() {
 	r.GET("/problem-detail", service.GetProblemDetail)
 	//// 用户
 	r.GET("/user-detail", service.GetUserDetail)
-	//r.POST("/login", service.Login)
-	//r.POST("/send-code", service.SendCode)
-	//r.POST("/register", service.Register)
+	r.POST("/login", service.Login)
+	r.POST("/send-code", service.SendCode)
+	r.POST("/register", service.Register)
 	//// 排行榜
 	//r.GET("/rank-list", service.GetRankList)
 	//// 提交记录
@@ -71,7 +71,7 @@ func Router() {
 	//// 代码提交
 	//authUser.POST("/submit", service.Submit)
 	//authUser.POST("/contest-registration", service.ContestRegistration)
-	err := r.Run(helper.HttpPort)
+	err := r.Run(utils.HttpPort)
 	if err != nil {
 		return
 	}

@@ -1,20 +1,10 @@
 package define
 
-import (
-	"os"
-)
-
 // DefaultPage 是默认的分页页码
 var DefaultPage = "1"
 
 // DefaultSize 是默认的每页显示数量
 var DefaultSize = "20"
-
-// MailPassword 从环境变量中获取邮件密码
-var MailPassword = os.Getenv("MailPassword")
-
-// MysqlDNS 是 MySQL 数据库的连接字符串
-var MysqlDNS = "xieyangyuyue:xieyangyuyue@tcp(111.170.11.164:10500)"
 
 // ProblemBasic 表示问题基础信息的结构体
 type ProblemBasic struct {
