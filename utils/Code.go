@@ -1,18 +1,16 @@
-package helper
+package utils
 
 import (
-	"gin_gorm_oj/utils"
+	"gin_gorm_oj/define"
 	"io/ioutil"
 	"os"
 	"time"
-
-	"gin_gorm_oj/define"
 )
 
 // CodeSave
 // 保存代码
 func CodeSave(code []byte) (string, error) {
-	dirName := "code/" + utils.GetUUID()
+	dirName := "code/" + GetUUID()
 	path := dirName + "/main.go"
 	err := os.Mkdir(dirName, 0777)
 	if err != nil {

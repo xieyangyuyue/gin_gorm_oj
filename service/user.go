@@ -2,13 +2,16 @@ package service
 
 import (
 	"errors"
-	"gin_gorm_oj/middelware"
+	"gin_gorm_oj/define"
+	"gin_gorm_oj/middlewares"
 	"gin_gorm_oj/models"
 	"gin_gorm_oj/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -81,7 +84,7 @@ func Login(c *gin.Context) {
 	}
 
 	// 生成JWT Token
-	token, err := middelware.GenerateToken(data.Identity, data.Name, data.IsAdmin)
+	token, err := middlewares.GenerateToken(data.Identity, data.Name, data.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -208,7 +211,7 @@ func Register(c *gin.Context) {
 	}
 
 	// 生成并返回Token
-	token, err := middelware.GenerateToken(userIdentity, name, data.IsAdmin)
+	token, err := middlewares.GenerateToken(userIdentity, name, data.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -224,47 +227,47 @@ func Register(c *gin.Context) {
 	})
 }
 
-//// GetRankList
-//// @Tags 公共方法
-//// @Summary 用户排行榜
-//// @Param page query int false "页码"
-//// @Param size query int false "每页数量"
-//// @Success 200 {string} json "{"code":"200","data":""}"
-//// @Router /rank-list [get]
-//func GetRankList(c *gin.Context) {
-//	size, _ := strconv.Atoi(c.DefaultQuery("size", define.DefaultSize))
-//	page, err := strconv.Atoi(c.DefaultQuery("page", define.DefaultPage))
-//	if err != nil {
-//		log.Println("分页参数转换错误:", err)
-//		return
-//	}
-//	page = (page - 1) * size // 计算偏移量
-//
-//	var count int64
-//	list := make([]*models.UserBasic, 0)
-//	// 按通过数降序、提交数升序排序，并分页
-//	err = models.DB.Model(new(models.UserBasic)).Count(&count).Order("pass_num DESC, submit_num ASC").
-//		Offset(page).Limit(size).Find(&list).Error
-//	if err != nil {
-//		c.JSON(http.StatusOK, gin.H{
-//			"code": -1,
-//			"msg":  "获取排行榜失败：" + err.Error(),
-//		})
-//		return
-//	}
-//	// 对邮箱进行脱敏处理（例如：a**@example.com）
-//	for _, v := range list {
-//		mail := strings.Split(v.Mail, "@")
-//		if len(mail) >= 2 {
-//			v.Mail = string(mail[0][0]) + "**@" + mail[1]
-//		}
-//	}
-//
-//	c.JSON(http.StatusOK, gin.H{
-//		"code": 200,
-//		"data": map[string]interface{}{
-//			"list":  list,   // 排行榜列表
-//			"count": count,  // 总用户数
-//		},
-//	})
-//}
+// GetRankList
+// @Tags 公共方法
+// @Summary 用户排行榜
+// @Param page query int false "页码"
+// @Param size query int false "每页数量"
+// @Success 200 {string} json "{"code":"200","data":""}"
+// @Router /rank-list [get]
+func GetRankList(c *gin.Context) {
+	size, _ := strconv.Atoi(c.DefaultQuery("size", define.DefaultSize))
+	page, err := strconv.Atoi(c.DefaultQuery("page", define.DefaultPage))
+	if err != nil {
+		log.Println("分页参数转换错误:", err)
+		return
+	}
+	page = (page - 1) * size // 计算偏移量
+
+	var count int64
+	list := make([]*models.UserBasic, 0)
+	// 按通过数降序、提交数升序排序，并分页
+	err = models.DB.Model(new(models.UserBasic)).Count(&count).Order("pass_num DESC, submit_num ASC").
+		Offset(page).Limit(size).Find(&list).Error
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "获取排行榜失败：" + err.Error(),
+		})
+		return
+	}
+	// 对邮箱进行脱敏处理（例如：a**@example.com）
+	for _, v := range list {
+		mail := strings.Split(v.Mail, "@")
+		if len(mail) >= 2 {
+			v.Mail = string(mail[0][0]) + "**@" + mail[1]
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": map[string]interface{}{
+			"list":  list,  // 排行榜列表
+			"count": count, // 总用户数
+		},
+	})
+}

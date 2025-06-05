@@ -38,8 +38,8 @@ var (
 // 包初始化函数（自动执行）
 func init() {
 	// 加载配置文件（路径：config/config.ini）
-	//file, err := ini.Load("./config/config.ini")
-	file, err := ini.Load("../config/config.ini")
+	file, err := ini.Load("./config/config.ini")
+	//file, err := ini.Load("../config/config.ini")
 	if err != nil {
 		fmt.Println("配置文件读取错误，请检查文件路径:", err)
 	}

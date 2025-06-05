@@ -2,6 +2,7 @@ package router
 
 import (
 	_ "gin_gorm_oj/docs"
+	"gin_gorm_oj/middlewares"
 	"gin_gorm_oj/service"
 	"gin_gorm_oj/utils"
 	"github.com/gin-gonic/gin"
@@ -36,28 +37,28 @@ func Router() {
 	r.POST("/send-code", service.SendCode)
 	r.POST("/register", service.Register)
 	//// 排行榜
-	//r.GET("/rank-list", service.GetRankList)
+	r.GET("/rank-list", service.GetRankList)
 	//// 提交记录
 	r.GET("/submit-list", service.GetSubmitList)
 	//// 分类列表
-	//r.GET("/category-list", service.GetCategoryList)
+	r.GET("/category-list", service.GetCategoryList)
 	//// 竞赛列表
 	//r.GET("/contest-list", service.GetContestList)
 	//r.GET("/contest-detail", service.GetContestDetail)
 	//
 	//// 管理员私有方法
-	//authAdmin := r.Group("/admin", middlewares.AuthAdminCheck())
-	////authAdmin := r.Group("/admin")
+	authAdmin := r.Group("/admin", middlewares.AuthAdminCheck())
+	//authAdmin := r.Group("/admin")
 	//// 问题创建
-	//authAdmin.POST("/problem-create", service.ProblemCreate)
+	authAdmin.POST("/problem-create", service.ProblemCreate)
 	//// 问题修改
-	//authAdmin.PUT("/problem-modify", service.ProblemModify)
-	//// 分类创建
-	//authAdmin.POST("/category-create", service.CategoryCreate)
+	authAdmin.PUT("/problem-modify", service.ProblemModify)
+	// 分类创建
+	authAdmin.POST("/category-create", service.CategoryCreate)
 	//// 分类修改
-	//authAdmin.PUT("/category-modify", service.CategoryModify)
+	authAdmin.PUT("/category-modify", service.CategoryModify)
 	//// 分类删除
-	//authAdmin.DELETE("/category-delete", service.CategoryDelete)
+	authAdmin.DELETE("/category-delete", service.CategoryDelete)
 	//// 获取测试案例
 	//authAdmin.GET("/test-case", service.GetTestCase)
 	//
@@ -67,9 +68,9 @@ func Router() {
 	//authAdmin.DELETE("/contest-delete", service.ContestDelete)
 	//
 	//// 用户私有方法
-	//authUser := r.Group("/user", middlewares.AuthUserCheck())
+	authUser := r.Group("/user", middlewares.AuthUserCheck())
 	//// 代码提交
-	//authUser.POST("/submit", service.Submit)
+	authUser.POST("/submit", service.Submit)
 	//authUser.POST("/contest-registration", service.ContestRegistration)
 	err := r.Run(utils.HttpPort)
 	if err != nil {
