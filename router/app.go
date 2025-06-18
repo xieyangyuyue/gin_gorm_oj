@@ -17,6 +17,7 @@ func Router() {
 
 	// 创建默认路由引擎（自带Logger和Recovery中间件）
 	r := gin.Default()
+	r.Use(middlewares.Cors())
 	//r := gin.New()
 	// 设置信任网络 []string
 	// nil 为不计算，避免性能消耗，上线应当设置

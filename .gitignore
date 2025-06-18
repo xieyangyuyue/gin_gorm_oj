@@ -32,8 +32,5 @@ go.work.sum
 # logger
 log
 
-# test
-test
-
 # docs
 docs
