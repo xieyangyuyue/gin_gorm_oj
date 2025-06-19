@@ -18,18 +18,18 @@ const service = axios.create({
 })
 // 2.请求拦截器
 service.interceptors.request.use(config => {
-		if (config.method === 'get') {
-			config.paramsSerializer = function(params) {
-				return qs.stringify(params, {
-					arrayFormat: 'comma'
-				})
-			}
+	if (config.method === 'get') {
+		config.paramsSerializer = function(params) {
+			return qs.stringify(params, {
+				arrayFormat: 'comma'
+			})
 		}
-		const token=localStorage.token
-		if(token){
-			
-			config.headers['Authorization']=token
-		}
+	}
+	const token=localStorage.token
+	if(token){
+
+		config.headers['Authorization']=token
+	}
 	return config
 }, error => {
 	Promise.reject(error)
@@ -39,7 +39,7 @@ service.interceptors.request.use(config => {
 service.interceptors.response.use((config) => {
 	return config
 }, (error) => {
-	 
+
 	if (error.response) {
 		const errorMessage = error.response.data === null ? '系统内部异常，请联系网站管理员' : error.response.data.message
 		switch (error.response.status) {
@@ -62,7 +62,7 @@ service.interceptors.response.use((config) => {
 			default:
 				if (errorMessage === 'refresh token无效') {
 					ElMessage('登录已过期，请重新登录')
-						 
+
 
 				} else {
 					ElMessage(errorMessage)

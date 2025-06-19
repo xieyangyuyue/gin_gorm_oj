@@ -44,8 +44,8 @@ func Router() {
 	//// 分类列表
 	r.GET("/category-list", service.GetCategoryList)
 	//// 竞赛列表
-	//r.GET("/contest-list", service.GetContestList)
-	//r.GET("/contest-detail", service.GetContestDetail)
+	r.GET("/contest-list", service.GetContestList)
+	r.GET("/contest-detail", service.GetContestDetail)
 	//
 	//// 管理员私有方法
 	authAdmin := r.Group("/admin", middlewares.AuthAdminCheck())
@@ -61,18 +61,18 @@ func Router() {
 	//// 分类删除
 	authAdmin.DELETE("/category-delete", service.CategoryDelete)
 	//// 获取测试案例
-	//authAdmin.GET("/test-case", service.GetTestCase)
+	authAdmin.GET("/test-case", service.GetTestCase)
 	//
 	//// 竞赛创建
-	//authAdmin.POST("/contest-create", service.ContestCreate)
-	//authAdmin.PUT("/contest-modify", service.ContestModify)
-	//authAdmin.DELETE("/contest-delete", service.ContestDelete)
+	authAdmin.POST("/contest-create", service.ContestCreate)
+	authAdmin.PUT("/contest-modify", service.ContestModify)
+	authAdmin.DELETE("/contest-delete", service.ContestDelete)
 	//
 	//// 用户私有方法
 	authUser := r.Group("/user", middlewares.AuthUserCheck())
 	//// 代码提交
 	authUser.POST("/submit", service.Submit)
-	//authUser.POST("/contest-registration", service.ContestRegistration)
+	authUser.POST("/contest-registration", service.ContestRegistration)
 	err := r.Run(utils.HttpPort)
 	if err != nil {
 		return
