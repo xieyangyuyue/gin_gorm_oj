@@ -208,6 +208,8 @@ func Submit(c *gin.Context) {
 				// 答案错误
 				if testCase.Output != out.String() {
 					// 若输出结果与测试用例的期望输出不一致，向 WA channel 发送信号
+					log.Println(testCase.Output)
+					log.Println(out.String())
 					WA <- 1
 					return
 				}
