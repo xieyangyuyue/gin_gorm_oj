@@ -59,3 +59,14 @@ var ValidGolangPackageMap = map[string]struct{}{
 	"sort":    {},
 	"strings": {},
 }
+
+const (
+	SubmitStatusPending             = 0 // 待判
+	SubmitStatusAccepted            = 1 // 答案正确
+	SubmitStatusWrongAnswer         = 2 // 答案错误
+	SubmitStatusTimeLimitExceeded   = 3 // 运行超时
+	SubmitStatusMemoryLimitExceeded = 4 // 运行超内存
+	SubmitStatusCompileError        = 5 // 编译错误
+	SubmitStatusInvalidCode         = 6 // 无效代码
+	// ... 其他状态
+)

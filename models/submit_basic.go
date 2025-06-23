@@ -40,11 +40,13 @@ func (table *SubmitBasic) TableName() string {
 // 返回一个 GORM 的查询构建器，可用于进一步的查询操作
 func GetSubmitList(problemIdentity, userIdentity string, status int) *gorm.DB {
 	// 构建查询语句，预加载关联的问题和用户信息，并排除问题的内容和用户的密码
-	tx := DB.Model(new(SubmitBasic)).Preload("ProblemBasic", func(db *gorm.DB) *gorm.DB {
-		return db.Omit("content")
-	}).Preload("UserBasic", func(db *gorm.DB) *gorm.DB {
-		return db.Omit("password")
-	})
+	tx := DB.Model(new(SubmitBasic)).
+		Preload("ProblemBasic", func(db *gorm.DB) *gorm.DB {
+			return db.Omit("content")
+		}).
+		Preload("UserBasic", func(db *gorm.DB) *gorm.DB {
+			return db.Omit("password")
+		})
 	// 如果问题标识不为空，添加问题标识的查询条件
 	if problemIdentity != "" {
 		tx.Where("problem_identity = ? ", problemIdentity)
