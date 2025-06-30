@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  myapp:
+    image: myapp:latest
+    build:
+      context: .  # 构建上下文路径
+      dockerfile: Dockerfile
+    container_name: myapp_prod
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./config:/app/config  # 持久化配置文件
+    environment:
+      - TZ=Asia/Shanghai  # 覆盖时区变量
+    networks:
+      - myapp_net
+
+networks:
+  myapp_net:
+    driver: bridge

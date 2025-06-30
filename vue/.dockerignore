@@ -1,0 +1,16 @@
+# 基础忽略
+.git
+.gitignore
+.dockerignore
+node_modules
+npm-debug.log
+.DS_Store
+
+# 构建过程忽略
+dist
+build
+
+# 开发环境文件
+.vscode
+.idea
+*.md
