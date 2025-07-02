@@ -1,4 +1,4 @@
-@@ 1,410
+[容器部署](./docker.md)
 # 基于Gin、Gorm、Vue 实现的在线练习系统
 > 演示地址：[http://getcharzp.gitee.io/gin-gorm-oj](http://getcharzp.gitee.io/gin-gorm-oj)
 >
